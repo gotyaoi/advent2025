@@ -1,7 +1,7 @@
 with open("../2.txt") as f:
     ranges = [
         range(int(a), int(b) + 1)
-        for a, b in [x.split("-") for x in f.read().strip().split(",")]
+        for a, b in (x.split("-") for x in f.read().strip().split(","))
     ]
 
 total = 0

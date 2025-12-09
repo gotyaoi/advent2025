@@ -6,14 +6,17 @@ with open("../8.txt") as f:
         (int(x), int(y), int(z)) for x, y, z in (line.strip().split(",") for line in f)
     )
 
-known = []
-for pair in itertools.combinations(points, 2):
-    distance = math.sqrt(
-        (pair[0][0] - pair[1][0]) ** 2
-        + (pair[0][1] - pair[1][1]) ** 2
-        + (pair[0][2] - pair[1][2]) ** 2
+known = [
+    (
+        pair,
+        math.sqrt(
+            (pair[0][0] - pair[1][0]) ** 2
+            + (pair[0][1] - pair[1][1]) ** 2
+            + (pair[0][2] - pair[1][2]) ** 2
+        ),
     )
-    known.append((pair, distance))
+    for pair in itertools.combinations(points, 2)
+]
 
 singletons = set(points)
 circuits: list[set[tuple[int, int, int]]] = []

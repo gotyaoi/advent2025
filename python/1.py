@@ -1,6 +1,6 @@
 with open("../1.txt") as f:
     rotations = [
-        int(x[1:]) * (-1 if x[0] == "L" else 1) for x in [line.strip() for line in f]
+        int(x[1:]) * (-1 if x[0] == "L" else 1) for x in (line.strip() for line in f)
     ]
 
 dial = 50
