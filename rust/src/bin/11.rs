@@ -1,13 +1,21 @@
 use std::collections::HashMap;
-use std::fs::read_to_string;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 fn main() {
-    let buffer = read_to_string("../11.txt").unwrap();
-    let graph: HashMap<_, _> = buffer
+    let graph: HashMap<_, _> = BufReader::new(File::open("../11.txt").unwrap())
         .lines()
-        .map(|line| {
+        .map(|l| {
+            let line = l.unwrap();
             let parts = line.split_once(": ").unwrap();
-            (parts.0, parts.1.split_whitespace().collect::<Vec<_>>())
+            (
+                parts.0.to_string(),
+                parts
+                    .1
+                    .split_whitespace()
+                    .map(ToString::to_string)
+                    .collect::<Vec<_>>(),
+            )
         })
         .collect();
 
@@ -27,7 +35,7 @@ fn main() {
 }
 
 fn paths<'a>(
-    graph: &HashMap<&'a str, Vec<&'a str>>,
+    graph: &'a HashMap<String, Vec<String>>,
     cache: &mut HashMap<(&'a str, &'a str), usize>,
     start: &'a str,
     end: &'a str,
@@ -37,9 +45,9 @@ fn paths<'a>(
         return *cached;
     }
     let mut total = 0;
-    if let Some(neighbors) = graph.get(&start) {
+    if let Some(neighbors) = graph.get(start) {
         for neighbor in neighbors {
-            if *neighbor == end {
+            if neighbor == end {
                 total += 1
             } else {
                 total += paths(graph, cache, neighbor, end)
